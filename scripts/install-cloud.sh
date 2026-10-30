@@ -10,6 +10,7 @@ export PATH="${HOME}/.local/bin:${PATH}"
 bash scripts/west-bootstrap.sh
 bash scripts/setup-toolchain.sh
 # shellcheck source=/dev/null
-source "${ROOT}/.ncs-toolchain-env.sh"
+source "${ROOT}/scripts/source-ncs-toolchain-env.sh"
+__source_ncs_toolchain_env "${ROOT}"
 bash scripts/west-update.sh
 bash scripts/build-matrix.sh

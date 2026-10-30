@@ -28,7 +28,8 @@ jobs:
           bash scripts/west-bootstrap.sh
           bash scripts/setup-toolchain.sh
           # shellcheck source=/dev/null
-          source .ncs-toolchain-env.sh
+          source scripts/source-ncs-toolchain-env.sh
+          __source_ncs_toolchain_env "$(pwd)"
           bash scripts/west-update.sh
           bash scripts/build-matrix.sh
 
