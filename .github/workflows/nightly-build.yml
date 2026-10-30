@@ -7,44 +7,30 @@ on:
   workflow_dispatch:
 
 jobs:
-  resolve-toolchain-image:
-    runs-on: ubuntu-latest
-    outputs:
-      image: ${{ steps.meta.outputs.image }}
-    steps:
-      - name: Resolve ghcr.io/nrfconnect/sdk-nrf-toolchain tag from sdk-nrf main
-        id: meta
-        shell: bash
-        run: |
-          set -euo pipefail
-          git clone --depth 1 --branch main https://github.com/nrfconnect/sdk-nrf /tmp/sdk-nrf
-          tc="$(/tmp/sdk-nrf/scripts/print_toolchain_checksum.sh)"
-          dv="$(cat /tmp/sdk-nrf/scripts/ncs-docker-version.txt)"
-          echo "image=ghcr.io/nrfconnect/sdk-nrf-toolchain:${tc}_${dv}" >> "${GITHUB_OUTPUT}"
-
   build-matrix:
-    needs: resolve-toolchain-image
     runs-on: ubuntu-latest
-    container:
-      image: ${{ needs.resolve-toolchain-image.outputs.image }}
-      env:
-        ACCEPT_JLINK_LICENSE: "1"
-    defaults:
-      run:
-        shell: bash
+    timeout-minutes: 120
     steps:
       - name: Checkout verification repo
         uses: actions/checkout@v4
 
-      - name: Bootstrap west workspace and build matrix
+      - name: Install base packages
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            ca-certificates curl git python3 python3-pip
+
+      - name: Bootstrap west workspace, toolchain, and build matrix
         run: |
           set -euo pipefail
           git config --global --add safe.directory '*'
           bash scripts/west-bootstrap.sh
+          bash scripts/setup-toolchain.sh
+          # shellcheck source=/dev/null
+          source .ncs-toolchain-env.sh
           bash scripts/west-update.sh
-          python3 -m pip install --user -q -r scripts/requirements.txt
-          export PATH="${HOME}/.local/bin:${PATH}"
-          python3 scripts/lib/build_matrix.py
+          bash scripts/build-matrix.sh
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4

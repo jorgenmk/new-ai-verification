@@ -27,7 +27,7 @@ Then run `bash scripts/build-matrix.sh` (after toolchain and `west update`).
 
 ### Nightly CI
 
-GitHub Actions workflow [`.github/workflows/nightly-build.yml`](.github/workflows/nightly-build.yml) resolves the official `ghcr.io/nrfconnect/sdk-nrf-toolchain` tag from current `sdk-nrf` main, then runs the same matrix build.
+GitHub Actions workflow [`.github/workflows/nightly-build.yml`](.github/workflows/nightly-build.yml) runs on `ubuntu-latest`, installs the NCS toolchain bundle via `nrfutil` (matching the checked-out `sdk-nrf` main), then runs the same matrix build as [`scripts/install-cloud.sh`](scripts/install-cloud.sh).
 
 ## Phase 2 (later): flash and test on hardware
 
