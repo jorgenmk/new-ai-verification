@@ -1,0 +1,19 @@
+# Declarative NCS build targets. Add boards/samples by appending rows.
+manifest:
+  url: https://github.com/nrfconnect/sdk-nrf
+  revision: main
+
+defaults:
+  sysbuild: true
+  pristine: true
+
+targets:
+  - id: nrf9151dk-net-download
+    board: nrf9151dk/nrf9151/ns
+    sample: samples/net/download
+    sysbuild: true
+    pristine: true
+    extra_west_args: []
+    hex_globs:
+      - "**/zephyr.hex"
+    verify: null

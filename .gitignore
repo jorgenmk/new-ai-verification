@@ -1,0 +1,8 @@
+ncs/
+.ncs-toolchain-env.sh
+artifacts/*
+!artifacts/.gitkeep
+__pycache__/
+*.pyc
+.python-version
+.venv/
