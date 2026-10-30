@@ -16,4 +16,14 @@ targets:
     extra_west_args: []
     hex_globs:
       - "**/zephyr.hex"
-    verify: null
+    verify:
+      flash:
+        tool: nrfutil
+      serial:
+        # Override with --serial or NCS_SERIAL_DEVICE if auto picks the wrong ACM port.
+        device: auto
+        baud: 115200
+      expect:
+        # Zephyr kernel banner after reset (phase 2 v1 — no network checks yet).
+        - pattern: "Booting Zephyr OS"
+          timeout_s: 90

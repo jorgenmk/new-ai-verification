@@ -29,8 +29,18 @@ Then run `bash scripts/build-matrix.sh` (after toolchain and `west update`).
 
 GitHub Actions workflow [`.github/workflows/nightly-build.yml`](.github/workflows/nightly-build.yml) runs on `ubuntu-latest`, installs the NCS toolchain bundle via `nrfutil` (matching the checked-out `sdk-nrf` main), then runs the same matrix build as [`scripts/install-cloud.sh`](scripts/install-cloud.sh).
 
-## Phase 2 (later): flash and test on hardware
+## Phase 2: flash and UART on hardware (self-hosted worker)
 
-Target the Linux bench worker (e.g. `worker=jokv-linux.nordicsemi.no`) and implement [`scripts/flash-and-verify.sh`](scripts/flash-and-verify.sh) using `verify:` blocks in the matrix.
+Run on a machine with the **nRF9151 DK** attached (Linux bench worker), from a clone of this repo:
 
-` samples/net/download` needs network/SIM at runtime — define expectations in `verify:` when enabling phase 2.
+```bash
+# Hex from a prior cloud/CI build, or --build-if-missing on a toolchain-equipped bench
+bash scripts/flash-and-verify.sh --target nrf9151dk-net-download
+# Optional: --serial /dev/ttyACM1  or export NCS_SERIAL_DEVICE=...
+```
+
+Trigger a **self-hosted** Cloud Agent (Project chat / runtime picker), e.g. worker **`jokv-linux.nordicsemi.no#/home/jokv`** (`workerId` `66e3bfa7-dc18-424c-966c-22f7ec3b4acc`), with:
+
+> Run `bash scripts/flash-and-verify.sh --target nrf9151dk-net-download` from the repo root.
+
+Phase 2 v1 checks only the **Zephyr boot banner** on UART (`Booting Zephyr OS` in [`tests/build-matrix.yaml`](tests/build-matrix.yaml)). Network/SIM checks come later.

@@ -27,8 +27,14 @@ Cloud agents use [`.cursor/environment.json`](.cursor/environment.json) (`script
 
 [`.github/workflows/nightly-build.yml`](.github/workflows/nightly-build.yml) runs on a schedule and `workflow_dispatch` on GitHub-hosted runners (toolchain via `nrfutil`, same steps as local), and uploads hex artifacts from the matrix.
 
-## Phase 2 — flash and verify (planned)
+## Phase 2 — flash and UART verify (self-hosted)
 
-[`scripts/flash-and-verify.sh`](scripts/flash-and-verify.sh) will program firmware on an **nRF9151 DK** via a self-hosted Cursor worker and assert serial/network output defined under `verify:` in the matrix.
+On a Linux bench with the **nRF9151 DK** (Cursor **self-hosted worker**):
 
-See [`AGENTS.md`](AGENTS.md) for agent-facing workflow notes.
+```bash
+bash scripts/flash-and-verify.sh --target nrf9151dk-net-download
+```
+
+Programs `artifacts/nrf9151dk-net-download/zephyr.hex` via **nrfutil**, resets the DK, and waits for **`Booting Zephyr OS`** on serial (115200; `device: auto` or `NCS_SERIAL_DEVICE`).
+
+See [`AGENTS.md`](AGENTS.md) for worker triggers and extending `verify:` in the matrix.
