@@ -33,4 +33,6 @@ if ! nrfutil toolchain-manager install --toolchain-bundle-id "${TOOLCHAIN_ID}"; 
 fi
 
 nrfutil toolchain-manager env --as-script > "${ENV_SCRIPT}"
+# Safe to source under `set -u` (CI uses nounset; LD_LIBRARY_PATH may be unset).
+sed -i 's/\$LD_LIBRARY_PATH/${LD_LIBRARY_PATH:-}/g' "${ENV_SCRIPT}"
 echo "Wrote ${ENV_SCRIPT}"
