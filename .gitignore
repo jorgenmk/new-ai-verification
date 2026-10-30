@@ -1,6 +1,6 @@
 ncs/
 .ncs-toolchain-env.sh
-artifacts/*
+artifacts/**
 !artifacts/.gitkeep
 __pycache__/
 *.pyc
