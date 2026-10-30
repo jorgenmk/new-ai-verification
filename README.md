@@ -25,7 +25,7 @@ Cloud agents use [`.cursor/environment.json`](.cursor/environment.json) (`script
 
 ### Nightly GitHub Actions
 
-[`.github/workflows/nightly-build.yml`](.github/workflows/nightly-build.yml) runs on a schedule and `workflow_dispatch`, uploads hex artifacts from the matrix.
+[`.github/workflows/nightly-build.yml`](.github/workflows/nightly-build.yml) runs on a schedule and `workflow_dispatch` on GitHub-hosted runners (toolchain via `nrfutil`, same steps as local), and uploads hex artifacts from the matrix.
 
 ## Phase 2 — flash and verify (planned)
 
